@@ -1,5 +1,5 @@
 <?php
-require_once 'config/database.php';
+require_once 'db.php';
 
 $id = $_GET['id'] ?? null;
 if (!$id) {
