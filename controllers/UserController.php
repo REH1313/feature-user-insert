@@ -8,8 +8,8 @@ class UserController {
         $password= '';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = trim($_POST['username'] ?? '')
-            $password = trim($_POST['password'] ?? '')
+            $username = trim($_POST['username'] ?? '');
+            $password = trim($_POST['password'] ?? '');
 
             if ($username === '') {
                 $errors['username'] = 'Username is required.';
@@ -20,7 +20,7 @@ class UserController {
             }
 
             if (empty($errors)) {
-                $userID = create_user($username, $password);
+                $userId = create_user($username, $password);
                 header("Location: profile.php?id=$userId");
                 exit;
             }
