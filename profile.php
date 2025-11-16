@@ -1,23 +1,24 @@
 <?php
-require_once 'controllers/UserController.php';
+require_once 'db.php';
 
 $id = $_GET['id'] ?? null;
-$controller = new UserController();
-$user = $controller->getUser($id);
+if (!$id) {
+    echo "USER ID missing.";
+    exit;
+}
 
-$mode = $_GET['mode'] ?? 'show'; // default to read-only
+$stmt = $pdo->prepare("SELECT username, password FROM users WHERE id = ?");
+$stmt->execute([$id]);
+$user = $stmt->fetch();
 
-include 'header.php';
+if (!$user) {
+    echo "User not found.";
+    exit;
+}
 ?>
 
-<div class="container mt-4">
-  <?php if ($mode === 'edit'): ?>
-    <?php include 'views/profile/edit.php'; ?>
-  <?php elseif ($mode === 'deactivate'): ?>
-    <?php include 'views/profile/deactivate.php'; ?>
-  <?php else: ?>
-    <?php include 'views/profile/show.php'; ?>
-  <?php endif; ?>
-</div>
-
-<?php include 'footer.php'; ?>
+<h2>User Profile</h2>
+<table>
+    <tr><th>Username</th><td><?= htmlspecialchars($user['username']) ?></td></tr>
+    <tr><th>Password</th><td><?= htmlspecialchars($user['password']) ?></td></tr>
+</table>
