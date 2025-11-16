@@ -2,29 +2,49 @@
 require_once 'models/UserModel.php';
 
 class UserController {
-    public function register() {
-        $errors = [];
-        $username = '';
-        $password= '';
+    private $model;
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = trim($_POST['username'] ?? '');
-            $password = trim($_POST['password'] ?? '');
+    public function __construct() {
+        $this->model = new UserModel();
+    }
 
-            if ($username === '') {
-                $errors['username'] = 'Username is required.';
-            }
+    public function getUser($id) {
+        return $this->model->getUserById($id);
+    }
 
-            if ($password === '') {
-                $errors['password'] = 'Password is required.';
-            }
+    public function createUser($data) {
+        $username = htmlspecialchars(trim($data['username']));
+        $password = htmlspecialchars(trim($data['password']));
+        return $this->model->insertUser($username, $password);
+    }
 
-            if (empty($errors)) {
-                $userId = create_user($username, $password);
-                header("Location: profile.php?id=$userId");
-                exit;
-            }
+    public function updateUser($data) {
+        $id = intval($data['id']);
+        $username = htmlspecialchars(trim($data['username']));
+        $password = htmlspecialchars(trim($data['password']));
+
+        if ($this->model->updateUser($id, $username, $password)) {
+            header("Location: ../profile.php?id=$id");
+            exit;
         }
-        include 'views/profile/create.php';
+    }
+
+    public function deactivateUser($id) {
+        if ($this->model->deactivateUser($id)) {
+            header("Location: ../index.php");
+            exit;
+        }
+    }
+}
+
+// Handle POST actions
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $controller = new UserController();
+    $action = $_GET['action'] ?? null;
+
+    if ($action === 'update') {
+        $controller->updateUser($_POST);
+    } elseif ($action === 'deactivate') {
+        $controller->deactivateUser($_POST['id']);
     }
 }

@@ -1,16 +1,8 @@
-<?php include 'views/partials/header.php'; ?>
-
-<h2>Register</h2>
-<form method="POST">
-    <label>Username:</label>
-    <input type="text" name="username" value="<?= htmlspecialchars($username) ?>">
-    <span><?= $errors['username'] ?? '' ?></span>
-
-    <label>Password:</label>
-    <input type="password" name="password">
-    <span><?= $errors['password'] ?? '' ?></span>
-
-    <button type="submit">Register</button>
+<form method="POST" action="register.php" class="card card-body">
+  <h5>Create Profile</h5>
+  <?php 
+    $user = []; // empty array so partial doesn’t break
+    include 'views/profile/partials/form-fields.php'; 
+  ?>
+  <button type="submit" class="btn btn-primary">Register</button>
 </form>
-
-<?php include 'views/partials/footer.php'; ?>
