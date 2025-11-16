@@ -6,6 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $controller->createUser($_POST);
 
     if ($id) {
+        // Redirect to profile page with the new user's ID
         header("Location: profile.php?id=$id");
         exit;
     } else {
@@ -20,7 +21,8 @@ include 'header.php';
   <h5>Create New Account</h5>
   <form method="POST" action="register.php" class="card card-body">
     <?php 
-      $user = []; // empty array so partial doesn’t break
+      // Empty $user array so partial doesn’t break
+      $user = []; 
       include 'views/profile/partials/form-fields.php'; 
     ?>
     <button type="submit" class="btn btn-primary">Register</button>
