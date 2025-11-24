@@ -4,6 +4,18 @@ require_once 'models/UserModel.php';
 class UserController {
     private $model;
 
+    public function getAllUsers() {
+        return $this->model->getAllUsers();
+    }
+
+    public function deleteUser($id) {
+        if ($this->model->deleteUser($id)) {
+            header("Location: ../admin/dashboard.php");
+            exit;
+        }
+        return false;
+    }
+
     public function __construct() {
         $this->model = new UserModel();
     }
