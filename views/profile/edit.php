@@ -1,4 +1,6 @@
 <?php include 'views/partials/header.php'; ?>
+<input type="hidden" name="id" value="<?= htmlspecialchars($user['id']); ?>">
+
 
 <form method="POST" action="controllers/UserController.php?action=update" class="card card-body mt-4">
   <h5 class="card-title">Edit Profile</h5>
