@@ -27,3 +27,7 @@
 </form>
 
 <?php include 'views/partials/footer.php'; ?>
+
+<?php if (!empty($error)): ?>
+    <div class="alert alert-danger"><?= htmlspecialchars($error); ?></div>
+<?php endif; ?>
