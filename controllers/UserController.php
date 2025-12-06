@@ -74,6 +74,39 @@ class UserController {
     public function getUser($id) {
         return $this->model->getUserById($id);
     }
+    
+    // Handle login
+    public function login($data) {
+        session_start();
+        $username = trim($data['username'] ?? '');
+        $password = $data['password'] ?? '';
+
+        $user = $this->model->getUserByUsername($username);
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $username;
+
+            if (!empty($data['remember'])) {
+                setcookie("user_id", $user['id'], time() + 86400, "/");
+            }
+            header("Location: ../admin/dashboard.php");
+            exit;
+        } else {
+            $error = "Invalid credentials.";
+            include 'views/auth/login.php';
+            return false;
+        }
+    }
+
+    // Handle logout
+    public function logout() {
+        session_start();
+        session_unset();
+        session_destroy();
+        setcookie("user_id", "", time() - 3600, "/");
+        header("Location: login.php?logged_out=1");
+        exit;
+    }
 }
 
 // Handle POST actions directly
@@ -87,5 +120,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $controller->updateUser($_POST);
     } elseif ($action === 'deactivate') {
         $controller->deactivateUser($_POST['id']);
+    } elseif ($action === 'login') {
+        $controller->login($_POST);
+    } elseif ($action === 'logout') {
+        $controller->logout();
     }
 }

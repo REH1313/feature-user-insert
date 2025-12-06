@@ -35,4 +35,15 @@ class UserModel {
         $stmt = $this->pdo->prepare("UPDATE users SET active = 0 WHERE id = :id");
         return $stmt->execute([':id' => $id]);
     }
+
+    // AUTHENTICATION
+    public function verifyCredentials($username, $password) {
+        $stmt = $this->pdo->prepare("SELECT id, password FROM users WHERE username = :username AND active = 1");
+        $stmt->execute([':username' => $username]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($user && password_verify($password, $user['password'])) {
+            return $user['id'];
+        }
+        return false;
+    }
 }
